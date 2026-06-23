@@ -1,0 +1,302 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+/* =========================================================================
+   PHASE A — AI-NATIVE DESIGN SYSTEM
+   Premium design tokens: color, typography, radius, elevation, motion.
+   Tailwind v4 @theme exposes these as utilities (bg-primary, text-success,
+   shadow-elevation-2, animate-fade-in, rounded-card, etc.).
+   ========================================================================= */
+@theme {
+  /* Typography */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Color system — semantic brand tokens */
+  --color-primary: #2563EB;
+  --color-primary-50: #EFF6FF;
+  --color-primary-100: #DBEAFE;
+  --color-primary-600: #2563EB;
+  --color-primary-700: #1D4ED8;
+  --color-accent: #06B6D4;
+  --color-accent-50: #ECFEFF;
+  --color-success: #10B981;
+  --color-success-50: #ECFDF5;
+  --color-warning: #F59E0B;
+  --color-warning-50: #FFFBEB;
+  --color-danger: #EF4444;
+  --color-danger-50: #FEF2F2;
+
+  /* Surfaces & ink */
+  --color-canvas: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-ink: #0F172A;
+  --color-muted: #64748B;
+  --color-line: #E2E8F0;
+
+  /* Border radius scale */
+  --radius-card: 1.25rem;
+  --radius-xl2: 1.5rem;
+
+  /* Elevation / shadow system — soft, layered, Stripe/Linear-grade depth */
+  --shadow-elevation-1: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.05);
+  --shadow-elevation-2: 0 2px 6px -2px rgb(15 23 42 / 0.05), 0 8px 24px -8px rgb(15 23 42 / 0.08);
+  --shadow-elevation-3: 0 8px 24px -6px rgb(15 23 42 / 0.08), 0 18px 44px -12px rgb(15 23 42 / 0.12);
+  --shadow-elevation-4: 0 24px 64px -16px rgb(15 23 42 / 0.20), 0 8px 24px -8px rgb(15 23 42 / 0.10);
+  /* Colored ambient shadows for premium float + hover */
+  --shadow-card: 0 12px 40px rgb(37 99 235 / 0.08), 0 2px 8px -2px rgb(15 23 42 / 0.05);
+  --shadow-card-hover: 0 20px 52px -12px rgb(37 99 235 / 0.18), 0 8px 24px -8px rgb(15 23 42 / 0.10);
+  --shadow-float: 0 28px 70px -20px rgb(15 23 42 / 0.22), 0 10px 28px -10px rgb(37 99 235 / 0.12);
+  --shadow-glow-primary: 0 0 0 1px rgb(37 99 235 / 0.20), 0 8px 28px -6px rgb(37 99 235 / 0.40);
+
+  /* Motion tokens */
+  --animate-fade-in: fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slide-up: slide-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-scale-in: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 2.4s ease-in-out infinite;
+  --animate-gradient-pan: gradient-pan 14s ease infinite;
+  --animate-sheen: sheen 6s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0%   { background-position: -468px 0; }
+  100% { background-position: 468px 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(37 99 235 / 0.35); }
+  50%      { box-shadow: 0 0 0 6px rgb(37 99 235 / 0); }
+}
+@keyframes gradient-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@keyframes sheen {
+  0%   { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
+  18%  { opacity: 0.55; }
+  38%  { transform: translateX(220%) skewX(-18deg); opacity: 0; }
+  100% { transform: translateX(220%) skewX(-18deg); opacity: 0; }
+}
+
+/* =========================================================================
+   Base layer — typography, app canvas
+   ========================================================================= */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv11", "ss01", "liga", "kern";
+}
+h1, h2, h3, h4 {
+  letter-spacing: -0.018em;
+}
+
+/* App shell — soft gradient mesh so the canvas never reads as flat whitespace */
+.app-shell {
+  background-color: var(--color-canvas);
+  background-image:
+    radial-gradient(1100px 620px at 100% -8%, rgb(6 182 212 / 0.07), transparent 58%),
+    radial-gradient(1200px 680px at -12% 0%, rgb(37 99 235 / 0.07), transparent 55%),
+    radial-gradient(900px 700px at 60% 110%, rgb(99 102 241 / 0.05), transparent 60%);
+  background-attachment: fixed;
+}
+
+/* =========================================================================
+   Reusable component-layer utilities (plain CSS — always build-safe)
+   ========================================================================= */
+
+/* Premium card surface with hover lift + inset top highlight for depth */
+.card-premium {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid rgb(226 232 240 / 0.9);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-elevation-2), inset 0 1px 0 rgb(255 255 255 / 0.7);
+  transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease;
+}
+.card-premium:hover {
+  box-shadow: var(--shadow-card-hover), inset 0 1px 0 rgb(255 255 255 / 0.7);
+  transform: translateY(-4px);
+  border-color: rgb(191 219 254 / 0.9);
+}
+
+/* Glassmorphism card — frosted surface for overlays / floating panels */
+.card-glass {
+  background: rgb(255 255 255 / 0.66);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  border: 1px solid rgb(255 255 255 / 0.72);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-elevation-2);
+}
+
+/* Strong floating elevation (hero widgets, key KPI tiles) */
+.card-float {
+  box-shadow: var(--shadow-float);
+}
+
+/* Gradient hairline border (brand accent outline) */
+.gradient-border {
+  border: 1px solid transparent;
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    linear-gradient(135deg, #2563EB, #06B6D4) border-box;
+}
+
+/* Generic hover lift for interactive non-card elements */
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevation-3);
+}
+
+/* Diagonal sheen overlay (place inside a position:relative, overflow-hidden parent) */
+.sheen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  animation: var(--animate-sheen);
+  pointer-events: none;
+}
+
+/* Subtle glass header */
+.glass {
+  background: rgb(255 255 255 / 0.7);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+}
+
+/* Animated gradient AI hero surface (dark, slowly panning brand gradient) */
+.ai-hero {
+  background:
+    radial-gradient(1200px 400px at 0% 0%, rgb(37 99 235 / 0.16), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgb(6 182 212 / 0.16), transparent 55%),
+    linear-gradient(135deg, #0B1220 0%, #111C33 55%, #0E1A30 100%);
+  background-size: 160% 160%, 160% 160%, 100% 100%;
+  animation: var(--animate-gradient-pan);
+}
+
+/* Light brand hero surface — for executive command center sections */
+.hero-light {
+  background:
+    radial-gradient(900px 380px at 100% 0%, rgb(6 182 212 / 0.12), transparent 55%),
+    radial-gradient(1000px 420px at 0% 0%, rgb(37 99 235 / 0.12), transparent 55%),
+    linear-gradient(135deg, #FFFFFF 0%, #F5F9FF 60%, #EFF6FF 100%);
+  background-size: 160% 160%, 160% 160%, 100% 100%;
+  animation: var(--animate-gradient-pan);
+}
+
+/* Skeleton loader shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #EEF2F7;
+  border-radius: 0.5rem;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.65), transparent);
+  animation: skeleton-sweep 1.4s ease-in-out infinite;
+}
+@keyframes skeleton-sweep {
+  100% { transform: translateX(100%); }
+}
+
+/* Active nav glow */
+.nav-glow {
+  box-shadow: var(--shadow-glow-primary);
+}
+
+/* Gradient text */
+.text-gradient-primary {
+  background: linear-gradient(90deg, #2563EB, #06B6D4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Honor reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Custom scrollbars for a premium light feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Thin, unobtrusive scrollbar for inner scroll regions (nav, chat, tables) */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #D5DCE6;
+  border-radius: 9px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #B6C0CE;
+}
+
+/* Range input styling overrides */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #3B82F6;
+  cursor: pointer;
+  border: 1px solid #9CA3AF;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+}
