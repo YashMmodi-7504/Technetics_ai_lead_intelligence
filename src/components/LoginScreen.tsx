@@ -102,24 +102,28 @@ export default function LoginScreen({ onSwitchToRegister }: LoginScreenProps) {
           </button>
         </form>
 
-        <div className="relative flex items-center justify-center my-4">
-          <div className="border-t border-[#E2E8F0] w-full" />
-          <span className="bg-white px-3 text-[10px] font-bold text-[#64748B] uppercase tracking-wider absolute">
-            Local Sandbox Mode
-          </span>
-        </div>
+        {import.meta.env.DEV && (
+          <>
+            <div className="relative flex items-center justify-center my-4">
+              <div className="border-t border-[#E2E8F0] w-full" />
+              <span className="bg-white px-3 text-[10px] font-bold text-[#64748B] uppercase tracking-wider absolute">
+                Local Sandbox Mode
+              </span>
+            </div>
 
-        <button
-          type="button"
-          onClick={handleDevLogin}
-          disabled={isLoading}
-          className="w-full bg-slate-50 border border-[#E2E8F0] hover:bg-slate-100 text-[#0F172A] text-xs font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 hover:cursor-pointer disabled:opacity-50"
-        >
-          <KeyRound className="w-4 h-4 text-blue-500" />
-          Auto-Login Developer Account
-        </button>
+            <button
+              type="button"
+              onClick={handleDevLogin}
+              disabled={isLoading}
+              className="w-full bg-slate-50 border border-[#E2E8F0] hover:bg-slate-100 text-[#0F172A] text-xs font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 hover:cursor-pointer disabled:opacity-50"
+            >
+              <KeyRound className="w-4 h-4 text-blue-500" />
+              Auto-Login Developer Account
+            </button>
+          </>
+        )}
 
-        <div className="text-center text-xs">
+        <div className="text-center text-xs mt-4">
           <span className="text-[#64748B]">New to Technetics? </span>
           <button
             onClick={onSwitchToRegister}

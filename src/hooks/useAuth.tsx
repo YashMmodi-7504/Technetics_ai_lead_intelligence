@@ -138,9 +138,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           error: null,
         });
       } catch (refreshErr) {
-        // In local development, if silent refresh fails, bootstrap dev session
-        const isDev = process.env.NODE_ENV !== "production";
-        if (isDev) {
+        // No valid session. In local dev, auto-bootstrap a session so the login
+        // screen is skipped. In production (Vite sets import.meta.env.DEV=false)
+        // fall through to unauthenticated → the login screen is shown.
+        if (import.meta.env.DEV) {
           console.log("[useAuth] Silent refresh failed, bootstrapping dev session...");
           await bootstrapDevSession();
         } else {

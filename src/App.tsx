@@ -3,6 +3,8 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import ImportCompanyModal from "./components/ImportCompanyModal";
 import { useAuth } from "./hooks/useAuth";
+import LoginScreen from "./components/LoginScreen";
+import RegisterScreen from "./components/RegisterScreen";
 
 import ExecutiveOverview from "./pages/ExecutiveOverview";
 import CountryIntelligence from "./pages/CountryIntelligence";
@@ -25,7 +27,8 @@ import { normalizeCountry } from "./utils/dataQuality";
 import type { AssistantDirective } from "./utils/assistantEngine";
 
 export default function App() {
-  const { isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const [authView, setAuthView] = useState<"login" | "register">("login");
   const [activeTab, setActiveTab] = useState<string>("executive-overview");
 
   // Company + country data sourced from the backend (CSV imports only).
@@ -94,10 +97,17 @@ export default function App() {
     else setActiveTab("company-discovery");
   };
 
-  // Login page removed — the session is bootstrapped automatically (useAuth).
-  // While that resolves, show the dashboard skeleton instead of a login screen.
+  // While the session initializes (silent refresh / dev bootstrap), show the
+  // dashboard skeleton.
   if (authLoading) {
     return <DashboardSkeleton />;
+  }
+
+  // Production auth gate: a visitor with no valid session must log in. In local
+  // dev, useAuth auto-bootstraps a session, so this screen never appears there.
+  if (!isAuthenticated) {
+    if (authView === "register") return <RegisterScreen onSwitchToLogin={() => setAuthView("login")} />;
+    return <LoginScreen onSwitchToRegister={() => setAuthView("register")} />;
   }
 
   if (loading) {
