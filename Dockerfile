@@ -1,18 +1,27 @@
 # syntax=docker/dockerfile:1
+
 FROM node:22-alpine AS builder
+
 WORKDIR /app
+
 COPY package*.json ./
-RUN npm ci --ignore-scripts
+RUN npm ci
+
 COPY . .
+
 RUN npm run build
 
-FROM node:22-alpine AS runner
+FROM node:22-alpine
+
 WORKDIR /app
+
 ENV NODE_ENV=production
+
 COPY package*.json ./
-RUN npm ci --omit=dev --ignore-scripts
+RUN npm ci --omit=dev
+
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/dist/server.cjs ./server.cjs
-EXPOSE 3000
-USER node
-CMD ["node", "server.cjs"]
+
+EXPOSE 8080
+
+CMD ["node", "dist/server.cjs"]
