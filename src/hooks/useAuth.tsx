@@ -4,6 +4,7 @@ import { setAccessToken, clearAccessToken, apiFetch, ApiError } from "../api/cli
 export interface AuthUser {
   id: number;
   email: string;
+  role?: string;
 }
 
 export interface AuthState {
