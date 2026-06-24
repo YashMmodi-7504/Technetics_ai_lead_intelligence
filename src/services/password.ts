@@ -1,5 +1,6 @@
-// Password hashing using bcrypt. Cost factor 12 is a sensible 2025 default.
-import bcrypt from "bcrypt";
+// Password hashing using bcryptjs (pure JS — no native binding, so it runs on
+// any Node host incl. Railway). Cost factor 12 is a sensible 2025 default.
+import bcrypt from "bcryptjs";
 
 const SALT_ROUNDS = 12;
 
