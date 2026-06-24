@@ -55,6 +55,11 @@ const PROVIDER_COLORS: Record<CsvProvider, string> = {
 
 type Step = "upload" | "preview" | "results";
 
+// Max CSV upload size — keep in sync with the backend multer limit
+// (src/middleware/upload.ts).
+const MAX_UPLOAD_MB = 100;
+const MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024;
+
 export default function ImportLeads({ onImportComplete, onNavigate, companies = [] }: ImportLeadsProps) {
   const [step, setStep] = useState<Step>("upload");
   const [dragOver, setDragOver] = useState(false);
@@ -72,6 +77,10 @@ export default function ImportLeads({ onImportComplete, onNavigate, companies = 
   const handleFile = useCallback(async (file: File) => {
     if (!file.name.toLowerCase().endsWith(".csv")) {
       setError("Only CSV files (.csv) are supported.");
+      return;
+    }
+    if (file.size > MAX_UPLOAD_BYTES) {
+      setError(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)} MB). Maximum is ${MAX_UPLOAD_MB} MB.`);
       return;
     }
     setSelectedFile(file);
@@ -272,7 +281,7 @@ export default function ImportLeads({ onImportComplete, onNavigate, companies = 
                       Drop your CSV file here
                     </p>
                     <p className="text-xs text-[#64748B] mt-1">
-                      or click to browse · Max 10 MB · .csv files only
+                      or click to browse · Max 100 MB · .csv files only
                     </p>
                   </div>
                 </div>
