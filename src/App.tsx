@@ -2,9 +2,6 @@ import { useState, useMemo } from "react";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import ImportCompanyModal from "./components/ImportCompanyModal";
-
-import LoginScreen from "./components/LoginScreen";
-import RegisterScreen from "./components/RegisterScreen";
 import { useAuth } from "./hooks/useAuth";
 
 import ExecutiveOverview from "./pages/ExecutiveOverview";
@@ -23,14 +20,12 @@ import DashboardSkeleton from "./components/DashboardSkeleton";
 import { useCrmData } from "./hooks/useCrmData";
 import { Company } from "./types";
 
-import { RefreshCw } from "lucide-react";
 import { computeLeadScore } from "./utils/leadScoring";
 import { normalizeCountry } from "./utils/dataQuality";
 import type { AssistantDirective } from "./utils/assistantEngine";
 
 export default function App() {
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const [authView, setAuthView] = useState<"login" | "register">("login");
+  const { isLoading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("executive-overview");
 
   // Company + country data sourced from the backend (CSV imports only).
@@ -99,21 +94,10 @@ export default function App() {
     else setActiveTab("company-discovery");
   };
 
-  // Auth gate
+  // Login page removed — the session is bootstrapped automatically (useAuth).
+  // While that resolves, show the dashboard skeleton instead of a login screen.
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-[#64748B]">
-          <RefreshCw className="w-7 h-7 animate-spin text-blue-600" />
-          <span className="text-sm font-sans font-medium">Verifying your security credentials...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    if (authView === "register") return <RegisterScreen onSwitchToLogin={() => setAuthView("login")} />;
-    return <LoginScreen onSwitchToRegister={() => setAuthView("register")} />;
+    return <DashboardSkeleton />;
   }
 
   if (loading) {

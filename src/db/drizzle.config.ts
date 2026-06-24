@@ -6,8 +6,16 @@ dotenv.config();
 
 const sqlHost = process.env.SQL_HOST;
 const sqlDbName = process.env.SQL_DB_NAME;
-const user = process.env.SQL_ADMIN_USER;
-const password = process.env.SQL_ADMIN_PASSWORD;
+// Prefer admin credentials for migrations; fall back to the runtime SQL user.
+const user = process.env.SQL_ADMIN_USER || process.env.SQL_USER;
+const password = process.env.SQL_ADMIN_PASSWORD || process.env.SQL_PASSWORD;
+
+// Match the runtime SSL behaviour (createPool) so managed providers like Neon
+// that require TLS connect correctly.
+const ssl =
+  process.env.SQL_SSL === "false"
+    ? false
+    : { rejectUnauthorized: process.env.SQL_SSL_REJECT_UNAUTHORIZED !== "false" };
 
 if (!sqlHost) {
   console.warn("SQL_HOST missing, using fallback for generate");
@@ -33,7 +41,7 @@ export default defineConfig({
     user: user,
     password: password,
     database: sqlDbName,
-    ssl: false, // Connecting via proxy locally
+    ssl,
   },
   verbose: true,
 });
