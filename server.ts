@@ -63,7 +63,13 @@ async function startServer() {
   await initializeDb();
   const app = express();
 
-  if (process.env.NODE_ENV === "production") {
+  // Vite dev middleware is used ONLY when explicitly in development. Any other
+  // value (production, staging, or an unset NODE_ENV — e.g. on Railway) serves
+  // the pre-built static assets from dist/. This prevents the deployed server
+  // from ever touching the Vite dependency optimizer / node_modules/.vite.
+  const isDevelopment = process.env.NODE_ENV === "development";
+
+  if (!isDevelopment) {
     app.use(helmet());
   }
   app.use(cors(corsOptions));
@@ -163,7 +169,7 @@ async function startServer() {
     res.status(404).json({ error: "Not found" });
   });
 
-  if (process.env.NODE_ENV !== "production") {
+  if (isDevelopment) {
     console.log(
       "Setting up Express in development mode with active Vite middleware...",
     );
@@ -173,9 +179,8 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    console.log(
-      "Setting up Express in production mode serving static built files in dist...",
-    );
+    console.log("Running in production mode");
+    console.log("Serving dist assets");
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
     app.get("*", (_req, res) => {
@@ -200,9 +205,7 @@ async function startServer() {
   );
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(
-      `TECHNETICS Backend Platform running on http://localhost:${PORT}`,
-    );
+    console.log(`Backend listening on PORT ${PORT}`);
   });
 }
 
