@@ -8,6 +8,7 @@ import {
   Globe2,
   Search,
 } from "lucide-react";
+import { API_BASE } from "../config/api";
 
 interface HeaderProps {
   title: string;
@@ -43,7 +44,7 @@ export default function Header({
     // 1. Live server check
     async function checkServerHealth() {
       try {
-        const response = await fetch("/api/health");
+        const response = await fetch(`${API_BASE}/api/health`);
         if (response.ok) {
           const data = await response.json();
           setHealthStatus({

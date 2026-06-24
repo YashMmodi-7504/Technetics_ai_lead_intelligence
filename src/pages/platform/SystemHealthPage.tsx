@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Activity, RefreshCw, CheckCircle, Database, Cpu, Lock, Network, AlertCircle } from "lucide-react";
+import { API_BASE } from "../../config/api";
 
 interface HealthData {
   status: string;
@@ -24,7 +25,7 @@ export default function SystemHealthPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/health");
+      const res = await fetch(`${API_BASE}/api/health`);
       if (!res.ok) throw new Error("Health check failed");
       const health = await res.json();
       setData(health);

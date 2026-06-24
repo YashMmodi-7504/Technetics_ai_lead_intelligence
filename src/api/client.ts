@@ -1,3 +1,5 @@
+import { API_BASE } from "../config/api";
+
 // In-memory access token store. Never persisted to localStorage.
 // Refresh token lives in an httpOnly cookie managed by the server.
 let accessToken: string | null = null;
@@ -15,7 +17,7 @@ async function silentRefresh(): Promise<string | null> {
   if (refreshPromise) return refreshPromise;
   refreshPromise = (async () => {
     try {
-      const res = await fetch("/api/auth/refresh", {
+      const res = await fetch(`${API_BASE}/api/auth/refresh`, {
         method: "POST",
         credentials: "include",
       });
@@ -60,7 +62,7 @@ export async function apiFetch<T>(
   }
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${API_BASE}/api${path}`, {
     ...options,
     headers,
     credentials: "include",
@@ -70,7 +72,7 @@ export async function apiFetch<T>(
     const refreshed = await silentRefresh();
     if (refreshed) {
       headers.Authorization = `Bearer ${refreshed}`;
-      const retry = await fetch(`/api${path}`, {
+      const retry = await fetch(`${API_BASE}/api${path}`, {
         ...options,
         headers,
         credentials: "include",

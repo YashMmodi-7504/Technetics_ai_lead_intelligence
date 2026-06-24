@@ -26,10 +26,15 @@ const loginSchema = z.object({
 });
 
 function refreshCookieOptions() {
+  // The frontend (Vercel) and API (Railway) are on different domains, so the
+  // refresh cookie must be cross-site capable: SameSite=None requires Secure.
+  // In local http dev (secure=false) fall back to Lax, since browsers reject
+  // SameSite=None without Secure.
+  const crossSite = config.cookie.secure;
   return {
     httpOnly: true,
     secure: config.cookie.secure,
-    sameSite: "strict" as const,
+    sameSite: (crossSite ? "none" : "lax") as "none" | "lax",
     domain: config.cookie.domain,
     path: "/api/auth",
     maxAge: config.jwt.refreshTtlDays * 24 * 60 * 60 * 1000,

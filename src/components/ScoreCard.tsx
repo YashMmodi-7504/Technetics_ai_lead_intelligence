@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Company } from "../types";
+import { API_BASE } from "../config/api";
 import {
   BadgeCheck,
   BrainCircuit,
@@ -51,7 +52,7 @@ export default function ScoreCard({
   const handleRunAiAudit = async () => {
     setIsScoring(true);
     try {
-      const response = await fetch("/api/score-comprehensive", {
+      const response = await fetch(`${API_BASE}/api/score-comprehensive`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

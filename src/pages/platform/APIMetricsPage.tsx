@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BarChart3, TrendingUp, RefreshCw, CheckCircle, Network } from "lucide-react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { API_BASE } from "../../config/api";
 
 interface HealthData {
   status: string;
@@ -20,7 +21,7 @@ export default function APIMetricsPage() {
 
   const fetchHealthMetrics = async () => {
     try {
-      const res = await fetch("/api/health");
+      const res = await fetch(`${API_BASE}/api/health`);
       if (res.ok) {
         const result = await res.json();
         setData(result);
